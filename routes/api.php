@@ -21,10 +21,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/fuck',function(){
-return 'fuck';
-});
-
 Route::post('/login', [AuthenticationController::class, 'login']);
 Route::post('/register', [AuthenticationController::class, 'register']);
 Route::post('/reset-pass', [AuthenticationController::class, 'resetPassword']); //no
