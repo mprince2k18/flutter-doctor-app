@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\DoctorProfile;
 
 class AppController extends Controller
 {
@@ -24,12 +25,22 @@ class AppController extends Controller
     //doctors_profile_update
     public function doctors_profile_update($user_id, Request $request)
     {
-        $doctor = User::where('id', $user_id)->first();
-        $doctor->speciality = $request->speciality;
-        $doctor->qualification = $request->qualification;
-        $doctor->experience = $request->experience;
-        $doctor->address = $request->address;
-        $doctor->phone = $request->phone;
+        $doctor = DoctorProfile::where('id', $user_id)->first();
+        if ($doctor) {
+            $doctor->speciality = $request->speciality;
+            $doctor->qualification = $request->qualification;
+            $doctor->experience = $request->experience;
+            $doctor->address = $request->address;
+            $doctor->phone = $request->phone;
+        }else{
+            $doctor = new DoctorProfile();
+            $doctor->user_id = $user_id;
+            $doctor->speciality = $request->speciality;
+            $doctor->qualification = $request->qualification;
+            $doctor->experience = $request->experience;
+            $doctor->address = $request->address;
+            $doctor->phone = $request->phone;
+        }
         $doctor->save();
         return response()->json($doctor);
     }
@@ -44,7 +55,7 @@ class AppController extends Controller
     //make_appointment
     public function make_appointment(Request $request)
     {
-        $appointment = new Appointment;
+        $appointment = new \App\Models\Appointment;
         $appointment->patient_id = $request->patient_id;
         $appointment->doctor_id = $request->doctor_id;
         $appointment->date = $request->date;
@@ -101,14 +112,15 @@ class AppController extends Controller
         $prescription->medicine = $request->medicine;
         $prescription->dosage = $request->dosage;
         $prescription->instruction = $request->instruction;
+        $prescription->date = $request->date;
         $prescription->save();
         return response()->json($prescription);
     }
 
     //prescription_list
-    public function prescription_list()
+    public function prescription_list($paitent_id)
     {
-        $prescriptions = \App\Models\Prescription::all();
+        $prescriptions = \App\Models\Prescription::where('patient_id', $paitent_id)->get();
         return response()->json($prescriptions);
     }
 
