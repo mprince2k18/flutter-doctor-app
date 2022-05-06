@@ -20,14 +20,15 @@ final class AuthenticationController extends BaseApiController
 
     public function register(Request $request) 
     {
-        return "ok";
-        return $request;
+       
+       
         $user = User::where('email', $request->email)->first();
 
         $message  = new User();
         if (!$user) {
             $user = new User();
             $user->email = $request->email;
+            $user->name = $request->name;
             $user->password = Hash::make($request->password);
             $user->role = $request->role;
             if($user->save()){
@@ -42,8 +43,42 @@ final class AuthenticationController extends BaseApiController
         return response()->json(['message'=>$message,'status'=>200]);
     }
 
+
+
+    public function doctorRegister(Request $request)
+    {
+        // return $request;
+        $user = User::where('email', $request->email)->first();
+
+        $message  = new User();
+        if (!$user) {
+            $user = new User();
+            $user->email = $request->email;
+            $user->name = $request->name;
+            $user->speciality = $request->speciality;
+            $user->qualification = $request->qualification;
+            $user->experience = $request->experience;
+            $user->address = $request->address;
+            $user->phone = $request->phone;
+            $user->password = Hash::make($request->password);
+            $user->role = $request->role;
+            if($user->save()){
+                $message->result = true;
+                $message->message = 'Register Successfully Done';
+                $message->user_id = $user->id;
+                return response($message,200);
+            }
+        }
+        $message->result = false;
+        $message->message = 'Email Already Exist';
+        return response()->json(['message'=>$message,'status'=>200]);
+    }
+
+
     public function login(Request $request)
     {
+
+        // return $request;
         $message = new User();
         $user = User::where('email', $request->email)->first();
 
@@ -56,9 +91,10 @@ final class AuthenticationController extends BaseApiController
             $message->id = $user->id;
             $message->email = $user->email;
             $message->role = $user->role;
+            $message->device_token = 'nai ekhon';
             $message->token = $user->createToken(env('APP_TOKEN'))->accessToken;
         }
-        return response()->json(['message'=>$message,'status'=>200]);
+        return response()->json($message);
     }
 
     public function logout(Request $request){

@@ -14,7 +14,7 @@ return [
     | any other location as required by the application or its packages.
     |
     */
-
+    'date_format' => 'm/d/Y',
     'name' => env('APP_NAME', 'Laravel'),
 
     /*

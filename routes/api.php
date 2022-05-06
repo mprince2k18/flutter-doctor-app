@@ -27,6 +27,8 @@ return 'fuck';
 
 Route::post('/login', [AuthenticationController::class, 'login']);
 Route::post('/register', [AuthenticationController::class, 'register']);
+Route::post('/register/doctor', [AuthenticationController::class, 'doctorRegister']);
+
 Route::post('/reset-pass', [AuthenticationController::class, 'resetPassword']); //no
 Route::group(['middleware' => 'auth:api'], static function () {
     Route::get('/userinfo', [UserController::class, 'getInfo']);
@@ -45,8 +47,8 @@ Route::get('/all-patient', [AppController::class, 'all_patient']);
 Route::post('/make-appointment', [AppController::class, 'make_appointment']);
 Route::put('/accept-appointment/{appointment_id}', [AppController::class, 'accept_appointment']);
 Route::get('/appointment-list', [AppController::class, 'appointment_list']);
-Route::get('/appointment-list-doctor', [AppController::class, 'appointment_list_doctor']);
-Route::get('/appointment-list-patient', [AppController::class, 'appointment_list_patient']);
+Route::get('/appointment-list-doctor/{id}', [AppController::class, 'appointment_list_doctor']);
+Route::get('/appointment-list-patient/{id}', [AppController::class, 'appointment_list_patient']);
 Route::get('/appointment-list-patient-doctor', [AppController::class, 'appointment_list_patient_doctor']);
 Route::post('/give-prescription', [AppController::class, 'give_prescription']);
-Route::get('/prescription-list', [AppController::class, 'prescription_list']);
+Route::get('/prescription-list/{id}', [AppController::class, 'prescription_list']);

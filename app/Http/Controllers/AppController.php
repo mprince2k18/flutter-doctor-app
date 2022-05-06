@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
+use App\Models\Prescription;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Carbon\Carbon;
+use Exception;
 
 class AppController extends Controller
 {
@@ -11,7 +15,7 @@ class AppController extends Controller
     public function all_doctors()
     {
         $doctors = User::where('role', 'doctor')->get();
-        return response()->json($doctors);
+        return response()->json(['doctors'=>$doctors]);
     }
 
     //doctors_profile
@@ -44,14 +48,24 @@ class AppController extends Controller
     //make_appointment
     public function make_appointment(Request $request)
     {
-        $appointment = new Appointment;
-        $appointment->patient_id = $request->patient_id;
+        // return $request;
+    //   try
+    //   {
+        $appointment = new Appointment();
+        $appointment->patient_id = $request->user_id;
         $appointment->doctor_id = $request->doctor_id;
-        $appointment->date = $request->date;
-        $appointment->time = $request->time;
+        $appointment->date = Carbon::parse($request->time);
+        // $appointment->time = Carbon::parse($request->time);
+        $appointment->subject = $request->subject;
+        $appointment->desc = $request->desc;
         $appointment->status = 0;
         $appointment->save();
-        return response()->json($appointment);
+        return response()->json(['message'=>'Submited successfully']);
+    //   }catch(Exception $e){
+       
+    //     return response()->json(['message'=>'try again']);
+    //   }
+        
     }
 
     // accept_appointment
@@ -74,14 +88,14 @@ class AppController extends Controller
     public function appointment_list_doctor($user_id)
     {
         $appointments = \App\Models\Appointment::where('doctor_id', $user_id)->get();
-        return response()->json($appointments);
+        return response()->json(['appointments'=>$appointments]);
     }
 
     // appointment_list_patient
     public function appointment_list_patient($user_id)
     {
         $appointments = \App\Models\Appointment::where('patient_id', $user_id)->get();
-        return response()->json($appointments);
+        return response()->json(['appointments'=>$appointments]);
     }
 
     // appointment_list_patient_doctor
@@ -94,22 +108,27 @@ class AppController extends Controller
     // give_prescription
     public function give_prescription(Request $request)
     {
+        // return $request;
         $prescription = new \App\Models\Prescription;
         $prescription->appointment_id = $request->appointment_id;
         $prescription->patient_id = $request->patient_id;
         $prescription->doctor_id = $request->doctor_id;
+        $prescription->date = Carbon::now();
+        // $table->string('date');
         $prescription->medicine = $request->medicine;
         $prescription->dosage = $request->dosage;
         $prescription->instruction = $request->instruction;
         $prescription->save();
-        return response()->json($prescription);
+        return response()->json(['message'=>'Submited successfully']);
+
     }
 
     //prescription_list
-    public function prescription_list()
+    public function prescription_list($id)
     {
-        $prescriptions = \App\Models\Prescription::all();
-        return response()->json($prescriptions);
+        // return $id;
+        $prescriptions = Prescription::where('appointment_id',$id)->get();
+        return response()->json(['prescriptions'=>$prescriptions]);
     }
 
     //ENDS
