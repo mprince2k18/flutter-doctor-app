@@ -20,12 +20,13 @@ final class AuthenticationController extends BaseApiController
 
     public function register(Request $request) 
     {
-       
+    //    return $request;
        
         $user = User::where('email', $request->email)->first();
+        // return $user;
 
         $message  = new User();
-        if (!$user) {
+        if ($user == null) {
             $user = new User();
             $user->email = $request->email;
             $user->name = $request->name;
@@ -35,12 +36,13 @@ final class AuthenticationController extends BaseApiController
                 $message->result = true;
                 $message->message = 'Register Successfully Done';
                 $message->user_id = $user->id;
-                return response($message,200);
             }
+        }else{
+            $message->result = false;
+            $message->message = 'Email Already Exist';
         }
-        $message->result = false;
-        $message->message = 'Email Already Exist';
-        return response()->json(['message'=>$message,'status'=>200]);
+        
+        return response()->json(['message'=>$message->message,'result'=>$message->result,'status'=>200]);
     }
 
 
@@ -51,7 +53,7 @@ final class AuthenticationController extends BaseApiController
         $user = User::where('email', $request->email)->first();
 
         $message  = new User();
-        if (!$user) {
+        if ($user == null) {
             $user = new User();
             $user->email = $request->email;
             $user->name = $request->name;
@@ -66,12 +68,14 @@ final class AuthenticationController extends BaseApiController
                 $message->result = true;
                 $message->message = 'Register Successfully Done';
                 $message->user_id = $user->id;
-                return response($message,200);
+               
             }
+        }else{
+            $message->result = false;
+            $message->message = 'Email Already Exist';
         }
-        $message->result = false;
-        $message->message = 'Email Already Exist';
-        return response()->json(['message'=>$message,'status'=>200]);
+       
+        return response()->json(['message'=>$message->message,'result'=>$message->result,'status'=>200]);
     }
 
 

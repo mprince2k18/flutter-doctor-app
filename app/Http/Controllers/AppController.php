@@ -6,12 +6,8 @@ use App\Models\Appointment;
 use App\Models\Prescription;
 use Illuminate\Http\Request;
 use App\Models\User;
-<<<<<<< HEAD
 use Carbon\Carbon;
 use Exception;
-=======
-use App\Models\DoctorProfile;
->>>>>>> 72b745478a63e1b89d184f2d5599bd37d8d0b324
 
 class AppController extends Controller
 {
@@ -62,16 +58,11 @@ class AppController extends Controller
     //make_appointment
     public function make_appointment(Request $request)
     {
-<<<<<<< HEAD
         // return $request;
     //   try
     //   {
         $appointment = new Appointment();
         $appointment->patient_id = $request->user_id;
-=======
-        $appointment = new \App\Models\Appointment;
-        $appointment->patient_id = $request->patient_id;
->>>>>>> 72b745478a63e1b89d184f2d5599bd37d8d0b324
         $appointment->doctor_id = $request->doctor_id;
         $appointment->date = Carbon::parse($request->time);
         // $appointment->time = Carbon::parse($request->time);
