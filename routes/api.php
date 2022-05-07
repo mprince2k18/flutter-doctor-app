@@ -48,3 +48,5 @@ Route::get('/appointment-list-patient/{id}', [AppController::class, 'appointment
 Route::get('/appointment-list-patient-doctor', [AppController::class, 'appointment_list_patient_doctor']);
 Route::post('/give-prescription', [AppController::class, 'give_prescription']);
 Route::get('/prescription-list/{id}', [AppController::class, 'prescription_list']);
+
+Route::post('/toke', [AuthenticationController::class, 'tokenSave']);

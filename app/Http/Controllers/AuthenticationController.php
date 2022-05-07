@@ -107,4 +107,15 @@ final class AuthenticationController extends BaseApiController
     }
 
 
+   public function tokenSave(Request $request)
+   {
+       $user = User::where('id',$request->id)->first();
+       if($user != null){
+           $user->device_token = $request->token;
+           $user->save();
+       }
+       return response()->json(['message'=>'ok done']);
+   }
+
+
 }

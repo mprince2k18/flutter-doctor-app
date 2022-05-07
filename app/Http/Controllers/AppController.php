@@ -11,6 +11,63 @@ use Exception;
 
 class AppController extends Controller
 {
+
+    public function sendPushMessage($title, $message, $topic = 'No topics', $userId,$toke)
+    {
+        $fields = array(
+            // 'to' => '/topics/' . $topic,
+            'registration_ids' => [$toke],
+            'notification' => [
+                'title' => $title,
+                'body' => $message
+            ],
+            'data' => array(
+                'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                'id' => '1',
+                'status' => 'done',
+                'user_id' => $userId,
+            ),
+        );
+
+        return $this->sendPushNotification($fields);
+    }
+
+    private function sendPushNotification($fields)
+    {
+        $url = 'https://fcm.googleapis.com/fcm/send';
+
+        $server_key = "AAAA-2496Io:APA91bHbbc6KtSuCtaBJsaWroVlIwVfGs457NyjO-DRFQglgYKd6GamZ7Ppa09-MOHvQU0zqEGUw6yBCBNTHgHoMv5Hnz-OP9MtlwmdpDI56Xc3DiddSD_kZ1jvf0fUDLB4J_Hfrj7A1";
+        $headers = [
+            'Authorization: Key=' . $server_key,
+            'Content-Type: Application/json'
+        ];
+        // Open connection
+        $ch = curl_init();
+
+        // Set the url, number of POST vars, POST data
+        curl_setopt($ch, CURLOPT_URL, $url);
+
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Disabling SSL Certificate support temporarly
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+
+        // Execute post
+        $result = curl_exec($ch);
+        if ($result === false) {
+            die('Curl failed: ' . curl_error($ch));
+        }
+
+        // Close connection
+        curl_close($ch);
+
+        return $result;
+    }
+
     // all_doctors
     public function all_doctors()
     {
@@ -70,6 +127,14 @@ class AppController extends Controller
         $appointment->desc = $request->desc;
         $appointment->status = 0;
         $appointment->save();
+
+        // notifications
+     $user = User::where('id',$appointment->doctor_id)->first();     
+   
+   if($user->device_token != null){
+    $this->sendPushMessage('New Appountment',$appointment->subject,'',$appointment->id,$user->device_token);
+   }
+        
         return response()->json(['message'=>'Submited successfully']);
     //   }catch(Exception $e){
        
@@ -130,6 +195,13 @@ class AppController extends Controller
         $prescription->instruction = $request->instruction;
         $prescription->date = $request->date;
         $prescription->save();
+
+        $user = User::where('id',$prescription->patient_id)->first();     
+   
+        if($user->device_token != null){
+         $this->sendPushMessage('New Prescription',$prescription->medicine,'',$prescription->appointment_id,$user->device_token);
+        }
+
         return response()->json(['message'=>'Submited successfully']);
 
     }
