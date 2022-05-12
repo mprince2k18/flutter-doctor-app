@@ -214,5 +214,13 @@ class AppController extends Controller
         return response()->json(['prescriptions'=>$prescriptions]);
     }
 
+
+    public function filter($t)
+    {
+       
+        $doctors = User::where('role', 'doctor')->where('speciality',$t)->get();
+        return response()->json(['doctors'=>$doctors]);
+    }
+
     //ENDS
 }

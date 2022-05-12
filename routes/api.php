@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AppController;
+use App\Http\Controllers\ForgetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,9 +18,14 @@ use App\Http\Controllers\AppController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
+
+
+Route::get('1/forget/password/{email}', [ForgetPasswordController::class, 'sentForgetCode']);
+Route::get('2/forget/password/{email}/{code}', [ForgetPasswordController::class, 'matchForgetCode']);
+Route::post('3/forget/password', [ForgetPasswordController::class, 'saveForgetCodePassword']);
+
+
 
 Route::post('/login', [AuthenticationController::class, 'login']);
 Route::post('/register', [AuthenticationController::class, 'register']);
@@ -48,5 +54,7 @@ Route::get('/appointment-list-patient/{id}', [AppController::class, 'appointment
 Route::get('/appointment-list-patient-doctor', [AppController::class, 'appointment_list_patient_doctor']);
 Route::post('/give-prescription', [AppController::class, 'give_prescription']);
 Route::get('/prescription-list/{id}', [AppController::class, 'prescription_list']);
+
+Route::get('/filter/{t}', [AppController::class, 'filter']);
 
 Route::post('/toke', [AuthenticationController::class, 'tokenSave']);

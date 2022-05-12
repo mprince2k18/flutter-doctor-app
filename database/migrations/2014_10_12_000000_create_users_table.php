@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('experience')->nullable();
             $table->string('address')->nullable();
             $table->string('phone')->nullable();
+            $table->string('code')->nullable();
             $table->timestamps();
         });
     }
