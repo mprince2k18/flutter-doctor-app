@@ -222,5 +222,49 @@ class AppController extends Controller
         return response()->json(['doctors'=>$doctors]);
     }
 
+
+    public function  showAppointment($id)
+    {
+        // return $id;
+        # code...
+        $appointments = collect();
+        $appointment = Appointment::where('patient_id',$id)->get();
+        
+        foreach($appointment as $item){
+            $demo = new User();
+            $demo->subject = $item->subject;
+            $demo->created_at = $item->date;
+            $user = User::where('id',$item->doctor_id)->first();
+            $demo->doctor_name =  $user->name;
+            $appointments->push($demo);
+        }
+        return response()->json(['historyappoint'=>$appointments]);
+       // apoinment subject, doctor name , apintment date, 
+    }
+
+
+    public function  showPashent($id)
+    {
+        # code...
+
+        $appointments = collect();
+        $appointment = Appointment::where('doctor_id',$id)->get();
+        
+        foreach($appointment as $item){
+            $demo = new User();
+            $demo->subject = $item->subject;
+            $demo->created_at = $item->date;
+            $user = User::where('id',$item->patient_id)->first();
+            $demo->doctor_name =  $user->name;
+            $appointments->push($demo);
+        }
+        return response()->json(['historyappoint'=>$appointments]);
+
+       // apoinment subject, pashent  name , apintment date, 
+    }
+
+
+
+
     //ENDS
 }

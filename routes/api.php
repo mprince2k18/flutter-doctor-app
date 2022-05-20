@@ -58,3 +58,6 @@ Route::get('/prescription-list/{id}', [AppController::class, 'prescription_list'
 Route::get('/filter/{t}', [AppController::class, 'filter']);
 
 Route::post('/toke', [AuthenticationController::class, 'tokenSave']);
+Route::get('/doctor-history-for-p/{id}',[AppController::class,'showAppointment']);
+Route::get('/patient-history-for-p/{id}',[AppController::class,'showPashent']);
+// patient-history-for-p
