@@ -121,8 +121,8 @@ class AppController extends Controller
         $appointment = new Appointment();
         $appointment->patient_id = $request->user_id;
         $appointment->doctor_id = $request->doctor_id;
-        $appointment->date = Carbon::parse($request->time);
-        // $appointment->time = Carbon::parse($request->time);
+        $appointment->date = Carbon::parse($request->date);
+        $appointment->time = $request->time;
         $appointment->subject = $request->subject;
         $appointment->desc = $request->desc;
         $appointment->status = 0;
