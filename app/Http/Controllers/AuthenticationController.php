@@ -30,6 +30,7 @@ final class AuthenticationController extends BaseApiController
             $user = new User();
             $user->email = $request->email;
             $user->name = $request->name;
+            $user->phone = $request->phone;
             $user->password = Hash::make($request->password);
             $user->role = $request->role;
             if($user->save()){
